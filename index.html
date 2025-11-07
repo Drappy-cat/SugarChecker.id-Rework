@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sugar Checker</title>
+
+  <script>
+    (function () {
+      try {
+        var key = 'sc-theme';
+        var stored = localStorage.getItem(key);
+        var initial = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', initial);
+      } catch (e) { }
+    })();
+  </script>
+
+  <link id="css-main" rel="stylesheet" href="./css/style.css?v=1">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+  <script src="https://unpkg.com/html5-qrcode" defer></script>
+</head>
+
+<body>
+
+  <header>
+    <div class="container">
+      <h1 class="logo" id="go-home" style="cursor:pointer; display:flex; align-items:center; gap:8px;">
+        <img src="./img/logo/sugar-checker-logo.png" alt="Logo SugarChecker" class="logo-img">
+        <a href="#home" style="text-decoration:none; color:inherit; font-size:1.5rem; font-weight:bold;">
+          Sugar<span> Checker</span>
+        </a>
+      </h1>
+
+      <div class="header-right">
+        <button type="button" id="open-info" class="btn-primary" style="padding: 8px 12px; font-weight:700;" hidden>
+          Lihat Info
+        </button>
+        <button type="button" id="nav-meter-btn" class="btn-outline"
+          style="padding: 8px 12px; font-weight:700; border: 2px solid #fff; color: #fff;" hidden>
+          Kalkulator
+        </button>
+
+        <div class="theme-switch">
+          <input type="checkbox" id="theme-toggle" aria-label="Ganti tema (Light/Dark)">
+          <label for="theme-toggle" class="switch">
+            <span class="sun" aria-hidden="true">☀️</span>
+            <span class="moon" aria-hidden="true">🌙</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section id="welcome-info" aria-label="Informasi Kadar Gula Bebas">
+      <div class="card" style="padding: 20px;">
+        <h2 style="color:var(--accent); text-align:center; font-size:2rem; margin-bottom:10px; font-weight:900;">Sugar
+          Level Checker</h2>
+        <h3 style="text-align:center; margin-top:0;">Penghitung Kadar Gula Bebas</h3>
+
+        <p id="welcome-text" style="text-align: center;">Selamat Datang</p>
+
+        <p><strong>Sugar Level Checker</strong> merupakan aplikasi penghitung kadar gula bebas pada makanan kemasan
+          (snack dan minuman) yang beredar di Indonesia.</p>
+        <p>Aplikasi ini dilengkapi dengan penghitungan konversi kalori total pada satu kemasan. Penggunaan aplikasi
+          dilakukan dengan melakukan scan pada produk kemasan. Hasil dilengkapi gambar visual yang menarik dan
+          informatif untuk pengguna.</p>
+
+        <hr style="margin:20px 0; border-color:var(--card-border);">
+
+        <h4 class="info-title-large" style="color:var(--accent-2);">Apa itu Gula Bebas?</h4>
+        <p><strong>Gula bebas (Free sugars)</strong> adalah semua gula yang ditambahkan ke makanan/minuman oleh
+          produsen, juru masak atau konsumen, serta gula alami pada madu, tebu, sirup, jus buah, konsentrat jus buah,
+          dan gula refinasi. Termasuk di dalamnya glukosa, sukrosa, fruktosa, dekstrosa, maltose, laktosa, dan
+          maltodextrim.</p>
+
+        <h4 class="info-title-large" style="color:var(--accent-2);">Rekomendasi WHO (World Health Organization)</h4>
+        <p>WHO merekomendasikan agar konsumsi gula bebas (free sugars) dibatasi pada:</p>
+        <ul>
+          <li>Kurang dari <strong>10%</strong> dari total energi harian untuk dewasa dan anak-anak.</li>
+          <li>Kurang dari <strong>5%</strong> dari total energi harian untuk manfaat kesehatan tambahan.</li>
+        </ul>
+
+        <p>Jika dikonversi ke berat gula untuk rata-rata kebutuhan energi orang dewasa 2.000 kkal, maka:</p>
+        <ul style="list-style: none; padding-left:0;">
+          <li>
+            ➡️ <strong>10%</strong> = 50 gram gula bebas/hari untuk dewasa dan anak di atas 11 tahun (sekitar 12 sendok
+            teh** atau **4 sendok makan**)
+            <div class="sugar-visual">
+              <img src="./img/sugar_visual/sendok-gula-4.png" alt="Ilustrasi 4 sendok makan gula"
+                class="sugar-spoon-img">
+            </div>
+          </li>
+          <li style="margin-top: 20px;">
+            ➡️ <strong>5%</strong> = 25 gram gula bebas/hari (sekitar 6 sendok teh atau 2 sendok makan)
+            <div class="sugar-visual">
+              <img src="./img/sugar_visual/sendok-gula-2.png" alt="Ilustrasi 2 sendok makan gula"
+                class="sugar-spoon-img">
+            </div>
+          </li>
+        </ul>
+
+        <h4 class="info-title-large" style="color:var(--accent-2);">Anjuran Kementerian Kesehatan RI (Kemenkes)</h4>
+        <p style="text-align: justify;">
+          <strong>Kementerian Kesehatan RI ( Kemenkes ) </strong> spesifik merekomendasikan:
+        </p>
+        <p style="margin-top: 5px;">Maksimum 50 gram gula/hari atau setara 4 sendok makan untuk dewasa dan anak di atas
+          11 tahun.</p>
+        <p style="margin-top: 5px;">Untuk anak, secara prinsip konsumsi gula sebaiknya lebih rendah dari dewasa,
+          mengikuti proporsi kebutuhan energi mereka.</p>
+
+
+        <div style="text-align:center; margin-top:30px;">
+          <button id="go-to-main" class="btn-primary" style="font-size: 1.1rem; padding: 12px 24px;">Lanjutkan ke
+            Aplikasi Utama</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="landing" aria-label="Halaman awal" hidden>
+      <div class="hero">
+        <h2 class="hero-title">Cek Kandungan </h2>
+        <p class="hero-subtitle">Cari nama produk, nomor barcode (EAN-13).</p>
+
+        <form id="search-form" class="search-bar" autocomplete="off">
+          <div class="search-input-wrapper">
+            <input id="search-input" type="search" placeholder="Contoh: Indomilk" aria-label="Cari produk">
+            <div id="search-suggestions" class="suggestions-container"></div>
+          </div>
+          <button type="submit" class="btn-primary">Cari</button>
+          <button type="button" id="open-scanner" class="btn-outline">Scan Barcode</button>
+        </form>
+      </div>
+
+      <div id="search-results" class="results" aria-live="polite"></div>
+    </section>
+
+    <!-- Halaman Kalkulator Gula (NEW) -->
+    <section id="sugar-meter" aria-label="Kalkulator Gula Harian" hidden>
+      <button class="link-back" id="back-from-meter">← Kembali ke Menu</button>
+
+      <div class="meter-header">
+        <h2 class="section-title">Kalkulator Gula Harian</h2>
+        <p style="text-align:center; margin-bottom: 20px;">Batas Rekomendasi: <strong>50 gram</strong> (4 Sendok Makan)
+        </p>
+      </div>
+
+      <!-- Gauge Section -->
+      <div class="card" style="text-align: center; margin-bottom: 30px;">
+        <h3>Total Gula Terpilih</h3>
+        <div
+          style="position: relative; height: 200px; width: 100%; max-width: 300px; margin: 0 auto; display: flex; justify-content: center;">
+          <canvas id="sugar-gauge"></canvas>
+          <!-- Angka di tengah -->
+          <div id="gauge-value"
+            style="position: absolute; bottom: 20px; font-size: 2rem; font-weight: bold; color: var(--text-main);">0g
+          </div>
+        </div>
+        <p id="gauge-warning" style="color: #d32f2f; font-weight: bold; margin-top: 10px; display: none;">⚠️ Melebihi
+          Batas Harian!</p>
+
+        <div id="selected-products-list" style="margin-top: 20px; text-align: left;">
+          <!-- List produk terpilih muncul disini -->
+          <p class="empty-hint" style="text-align:center; color: var(--text-muted);">Belum ada produk dipilih (Max 5)
+          </p>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="card">
+        <div class="control-bar" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+          <input type="text" id="meter-search" placeholder="Cari nama produk..." class="form-input" style="flex: 1;">
+          <select id="meter-sort" class="form-input" style="width: auto;">
+            <option value="asc">Nama (A-Z)</option>
+            <option value="desc">Nama (Z-A)</option>
+          </select>
+          <button id="meter-scan-btn" class="btn-outline">📷 Scan</button>
+        </div>
+
+        <!-- List Produk Grid -->
+        <div id="meter-product-grid" class="results"></div>
+
+        <!-- Pagination -->
+        <div class="pagination"
+          style="display: flex; justify-content: center; gap: 5px; margin-top: 20px; flex-wrap: wrap;"
+          id="meter-pagination">
+          <!-- Tombol page digenerate JS -->
+        </div>
+      </div>
+    </section>
+
+    <section id="ecodes-info" class="band full-bleed" aria-label="Understanding E-Codes" hidden>
+      <div class="container band-inner">
+        <h2 class="band-title">Sugar Checker</h2>
+        <span class="brand-tagline">Cek kandungan gula, lemak, dan kalori makananmu!</span>
+        <span class="brand-tagline">Sugar Checker membantu kamu membaca label lebih cerdas—scan barcode, cek E-code, dan
+          pahami kandungan produk makanan atau Minuman dalam sekali klik.</span>
+        <p class="band-subtitle">
+
+        </p>
+    </section>
+
+    <section id="detail" aria-label="Detail produk" hidden>
+      <div class="content-wrapper">
+        <div class="main-content">
+          <button class="link-back" id="back-to-home">← Kembali</button>
+          <h2 id="nama-makanan">Mie</h2>
+
+          <div class="detail-photo-container">
+            <img id="foto-makanan" src="" alt="Foto makanan" class="detail-photo" hidden>
+            <p id="foto-makanan-na" class="image-not-available" hidden>Gambar produk belum tersedia</p>
+          </div>
+
+          <div class="product-meta-info card">
+            <p><strong>Diproduksi oleh:</strong> <span id="info-manufaktur">-</span></p>
+            <p><strong>Barcode:</strong> <span id="info-barcode">-</span></p>
+          </div>
+
+          <div class="card">
+            <h3>Informasi Produk</h3>
+            <p class="serving-size">Ukuran Porsi: <span id="ukuran-porsi">100 g</span></p>
+            <p class="serving-size">Ukuran Kemasan: <span id="info-ukuran">-</span></p>
+            <table class="nutrition-table">
+              <thead>
+                <tr>
+                  <th>Kandungan</th>
+                  <th>Jumlah</th>
+                </tr>
+              </thead>
+              <tbody id="tabel-gizi"></tbody>
+            </table>
+          </div>
+
+        </div>
+
+        <aside class="sidebar">
+          <div class="card">
+            <h3>Ringkasan :</h3>
+            <div class="summary-grid">
+              <div class="summary-item">
+                <div class="value" id="info-kalori">0</div>
+                <div class="label">Kal</div>
+              </div>
+              <div class="summary-item">
+                <div class="value" id="info-lemak">0g</div>
+                <div class="label">Lemak</div>
+              </div>
+              <div class="summary-item">
+                <div class="value" id="info-karbo">0g</div>
+                <div class="label">Karb</div>
+              </div>
+              <div class="summary-item">
+                <div class="value" id="info-protein">0g</div>
+                <div class="label">Prot</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 id="persen-akg">...% dari AKG*</h3>
+            <div class="chart-container"><canvas id="macro-chart"></canvas></div>
+            <div id="rincian-makro">Rincian Kalori: ...</div>
+          </div>
+
+          <div class="card">
+            <h3>Gambar Barcode</h3>
+            <div class="detail-photo-container">
+              <img id="info-barcode-img" alt="Foto barcode" class="detail-photo" hidden>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="brand-strip full-bleed" aria-label="Brand strip">
+      <div class="container brand-wrap">
+        <div class="brand-left">
+          <span class="brand-name">Sugar Checker</span>
+        </div>
+        <div class="brand-copy">© 2025 Sugar Checker. All rights reserved.</div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="scanner-modal" aria-hidden="true" role="dialog" aria-labelledby="scanner-title" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-body">
+      <div class="camera-controls" style="display:flex; gap:8px; margin-bottom:10px">
+        <select id="camera-select" aria-label="Pilih kamera"></select>
+        <button type="button" id="switch-camera" class="btn-outline">Switch</button>
+        <label class="btn-outline" style="display:inline-block; padding:6px 10px; cursor:pointer;">
+          Scan dari Foto
+          <input id="barcode-file" type="file" accept="image/*" style="display:none">
+        </label>
+      </div>
+
+      <div class="modal-header">
+        <h3 id="scanner-title">Pindai Barcode Produk</h3>
+        <button class="modal-close" data-close aria-label="Tutup">✕</button>
+      </div>
+      <div id="qr-reader" style="width:100%"></div>
+      <p class="modal-hint">Scanner butuh HTTPS atau http://localhost. Arahkan kamera ke barcode EAN-13.</p>
+    </div>
+  </div>
+
+  <script src="./js/script.js" defer></script>
+</body>
+
+</html>
