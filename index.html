@@ -34,12 +34,12 @@
       </h1>
 
       <div class="header-right">
-        <button type="button" id="open-info" class="btn-primary" style="padding: 8px 12px; font-weight:700;" hidden>
-          Lihat Info
-        </button>
         <button type="button" id="nav-meter-btn" class="btn-outline"
           style="padding: 8px 12px; font-weight:700; border: 2px solid #fff; color: #fff;" hidden>
           Kalkulator
+        </button>
+        <button type="button" id="open-info" class="btn-primary" style="padding: 8px 12px; font-weight:700;" hidden>
+          Lihat Info
         </button>
 
         <div class="theme-switch">
@@ -145,21 +145,31 @@
       <div class="meter-header">
         <h2 class="section-title">Kalkulator Gula Harian</h2>
         <p style="text-align:center; margin-bottom: 20px;">Batas Rekomendasi: <strong>50 gram</strong> (4 Sendok Makan)
-        </p>
       </div>
 
-      <!-- Gauge Section -->
+      <!-- Gauge Section (Native) -->
       <div class="card" style="text-align: center; margin-bottom: 30px;">
         <h3>Total Gula Terpilih</h3>
-        <div
-          style="position: relative; height: 200px; width: 100%; max-width: 300px; margin: 0 auto; display: flex; justify-content: center;">
-          <canvas id="sugar-gauge"></canvas>
-          <!-- Angka di tengah -->
-          <div id="gauge-value"
-            style="position: absolute; bottom: 20px; font-size: 2rem; font-weight: bold; color: var(--text-main);">0g
+
+        <div class="gauge-wrapper">
+          <div class="gauge-body"></div>
+          <div class="gauge-needle" id="gauge-needle"></div>
+          <div class="gauge-labels">
+            <span>0g</span>
+            <span>25g</span>
+            <span>50g</span>
+            <span>75g+</span>
           </div>
         </div>
-        <p id="gauge-warning" style="color: #d32f2f; font-weight: bold; margin-top: 10px; display: none;">⚠️ Melebihi
+
+        <!-- Angka & Status -->
+        <div id="gauge-value"
+          style="font-size: 2.5rem; font-weight: 800; line-height:1; margin-top:-40px; position:relative; z-index:20;">
+          0g</div>
+        <div id="gauge-status" style="font-size: 1.1rem; font-weight: 600; margin-top:5px; color: var(--muted);">Aman
+        </div>
+
+        <p id="gauge-warning" style="color: #d32f2f; font-weight: bold; margin-top: 15px; display: none;">⚠️ Melebihi
           Batas Harian!</p>
 
         <div id="selected-products-list" style="margin-top: 20px; text-align: left;">
