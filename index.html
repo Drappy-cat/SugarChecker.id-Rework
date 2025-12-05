@@ -252,24 +252,47 @@
 
         <aside class="sidebar">
           <div class="card">
-            <h3>Ringkasan :</h3>
+            <h3>Ringkasan Gizi</h3>
             <div class="summary-grid">
-              <div class="summary-item">
+              <div class="summary-item" style="color: #fbc02d;">
+                <i class='bx bx-bolt' style="font-size: 2rem; margin-bottom:5px;"></i>
                 <div class="value" id="info-kalori">0</div>
-                <div class="label">Kal</div>
+                <div class="label">Energi</div>
               </div>
-              <div class="summary-item">
+              <div class="summary-item" style="color: #d32f2f;">
+                <i class='bx bxs-droplet' style="font-size: 2rem; margin-bottom:5px;"></i>
                 <div class="value" id="info-lemak">0g</div>
                 <div class="label">Lemak</div>
               </div>
-              <div class="summary-item">
+              <div class="summary-item" style="color: #1976d2;">
+                <i class='bx bx-baguette' style="font-size: 2rem; margin-bottom:5px;"></i>
                 <div class="value" id="info-karbo">0g</div>
-                <div class="label">Karb</div>
+                <div class="label">Karbo</div>
               </div>
-              <div class="summary-item">
+              <div class="summary-item" style="color: #f57c00;">
+                <i class='bx bx-dumbbell' style="font-size: 2rem; margin-bottom:5px;"></i>
                 <div class="value" id="info-protein">0g</div>
-                <div class="label">Prot</div>
+                <div class="label">Protein</div>
               </div>
+            </div>
+          </div>
+
+          <!-- New Sugar Pie Chart Card -->
+          <div class="card">
+            <h3>Gula Harian (50g)</h3>
+            <div class="chart-container"
+              style="justify-content:center; align-items:center; display:flex; flex-direction:column; padding: 10px 0;">
+
+              <!-- CSS Pie Chart -->
+              <div class="pie-chart" id="sugar-pie" style="--p:0; --c:#e91e63;">
+                <span id="sugar-pie-text">0%</span>
+              </div>
+
+              <div id="sugar-detail-text"
+                style="font-size: 0.9rem; color: var(--muted); margin-top:10px; text-align:center;">
+                0g terpenuhi dari batas harian
+              </div>
+
             </div>
           </div>
 
