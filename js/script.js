@@ -705,7 +705,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       detail.hidden = true;
       ecodesInfo.hidden = true;
       openInfoBtn.hidden = true;
-      if (navMeterBtn) navMeterBtn.hidden = true;
+      if (navMeterBtn) navMeterBtn.hidden = false; // Default: Tampilkan tombol kalkulator di halaman lain
 
       if (section === 'info') {
         welcomeInfo.hidden = false;
@@ -714,12 +714,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         landing.hidden = false;
         ecodesInfo.hidden = false;
         openInfoBtn.hidden = false;
-        if (navMeterBtn) navMeterBtn.hidden = false; // Tampilkan di Home
         searchInput.focus();
       } else if (section === 'detail') { // detail
         detail.hidden = false;
         openInfoBtn.hidden = false;
-        if (navMeterBtn) navMeterBtn.hidden = false; // Tampilkan di Detail
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }
