@@ -18,6 +18,8 @@
   </script>
 
   <link id="css-main" rel="stylesheet" href="./css/style.css?v=1">
+  <!-- Icons (No local files) -->
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
   <script src="https://unpkg.com/html5-qrcode" defer></script>
 </head>
@@ -36,17 +38,18 @@
       <div class="header-right">
         <button type="button" id="nav-meter-btn" class="btn-outline"
           style="padding: 8px 12px; font-weight:700; border: 2px solid #fff; color: #fff;" hidden>
-          Kalkulator
+          <i class='bx bx-calculator' style="font-size:1.1rem; vertical-align:middle; margin-right:4px;"></i> Kalkulator
         </button>
         <button type="button" id="open-info" class="btn-primary" style="padding: 8px 12px; font-weight:700;" hidden>
-          Lihat Info
+          <i class='bx bx-info-circle' style="font-size:1.1rem; vertical-align:middle; margin-right:4px;"></i> Lihat
+          Info
         </button>
 
         <div class="theme-switch">
           <input type="checkbox" id="theme-toggle" aria-label="Ganti tema (Light/Dark)">
           <label for="theme-toggle" class="switch">
-            <span class="sun" aria-hidden="true">☀️</span>
-            <span class="moon" aria-hidden="true">🌙</span>
+            <span class="sun" aria-hidden="true"><i class='bx bx-sun'></i></span>
+            <span class="moon" aria-hidden="true"><i class='bx bx-moon'></i></span>
           </label>
         </div>
       </div>
@@ -130,8 +133,8 @@
             <input id="search-input" type="search" placeholder="Contoh: Indomilk" aria-label="Cari produk">
             <div id="search-suggestions" class="suggestions-container"></div>
           </div>
-          <button type="submit" class="btn-primary">Cari</button>
-          <button type="button" id="open-scanner" class="btn-outline">Scan Barcode</button>
+          <button type="submit" class="btn-primary"><i class='bx bx-search'></i> Cari</button>
+          <button type="button" id="open-scanner" class="btn-outline"><i class='bx bx-scan'></i> Scan Barcode</button>
         </form>
       </div>
 
