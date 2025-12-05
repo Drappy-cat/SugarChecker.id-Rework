@@ -951,20 +951,25 @@ main {
   /* Default block to allow top-aligned flow */
 }
 
+/* Bottom Border Line to close the gauge */
+.gauge-wrapper::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  /* Thickness of border */
+  background: var(--text);
+  z-index: 5;
+}
+
 .gauge-body {
   width: 260px;
   height: 260px;
   /* Full Circle */
   border-radius: 50%;
   background:
-    /* Layer 1: Ticks (White transparent lines) */
-    conic-gradient(from 270deg,
-      rgba(255, 255, 255, 0.8) 0deg 1deg, transparent 1deg 44deg,
-      rgba(255, 255, 255, 0.8) 44deg 46deg, transparent 46deg 89deg,
-      rgba(255, 255, 255, 0.8) 89deg 91deg, transparent 91deg 134deg,
-      rgba(255, 255, 255, 0.8) 134deg 136deg, transparent 136deg 179deg,
-      rgba(255, 255, 255, 0.8) 179deg 180deg, transparent 180deg),
-    /* Layer 2: Smooth Color Gradient */
     conic-gradient(from 270deg,
       #4caf50 0deg,
       /* Green */
@@ -1037,9 +1042,11 @@ main {
 
 .gauge-labels span {
   position: absolute;
-  font-size: 0.8rem;
-  font-weight: bold;
-  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--text);
+  text-shadow: 0 1px 2px var(--bg);
+  /* Outline effect for readability */
 }
 
 /* Updated Tick positions */
@@ -1059,7 +1066,7 @@ main {
 
 /* Seg 1-2 border (~19g) */
 .gauge-labels span:nth-child(2) {
-  top: 35px;
+  top: 55px;
   /* Adjusted */
   left: 30px;
 }
@@ -1073,7 +1080,7 @@ main {
 
 /* Seg 3-4 border (~56g) */
 .gauge-labels span:nth-child(4) {
-  top: 35px;
+  top: 55px;
   /* Adjusted */
   right: 30px;
 }
