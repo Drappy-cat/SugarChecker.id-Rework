@@ -971,4 +971,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     });
   }
+  // Force refresh UI state to ensure nav button visibility
+  if (!landing.hidden || !detail.hidden) {
+    if (navMeterBtn) navMeterBtn.hidden = false;
+  }
 });
