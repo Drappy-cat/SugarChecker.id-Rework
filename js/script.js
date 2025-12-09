@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       return localStorage.getItem(THEME_KEY) || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     } catch (e) {
-      return 'light'; // Fallback if localStorage blocked
+      return 'light'; 
     }
   }
 
@@ -47,13 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
     goHome: document.getElementById('go-home'),
     backBtn: document.getElementById('back-to-home'),
     backMeterBtn: document.getElementById('back-from-meter'),
-    autoNavMeterBtn: document.getElementById('nav-meter-btn'), // "Kalkulator" in Header
-    navMeterBtn: document.getElementById('nav-calc-btn'), // Potentially duplicate? Checking header one is 'nav-meter-btn'
-    // Wait, in index.html line 39 it is 'nav-meter-btn'.
-    // In line 100+ there is 'nav-calc-btn' inside 'nav-right'. 
-    // I need to be careful. I see 'nav-meter-btn' in header right (line 39).
-    // I see 'nav-calc-btn' in my previous edits for Navbar?
-    // Let's just key off IDs that exist.
+    autoNavMeterBtn: document.getElementById('nav-meter-btn'), 
+    navMeterBtn: document.getElementById('nav-calc-btn'), 
 
     openInfoBtn: document.getElementById('open-info'),
     openScannerBtn: document.getElementById('open-scanner'),
@@ -100,9 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
     detailSugarSpoonImg: document.getElementById('detail-sugar-spoon-img'),
   };
 
-  // Safe Element Getter
-  // (We use `els` object but checks should be inline or robust)
-
   let macroChart;
   let CSV_DATA = [];
 
@@ -122,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (el) el.hidden = true;
     });
 
-    // 2. Map 'home' -> 'landing' etc if needed, or just match IDs
+    // 2. Map 'home' -> 'landing' 
     let target = null;
     if (sectionId === 'home') target = els.landing;
     else if (sectionId === 'info') target = els.welcomeInfo;
@@ -133,16 +125,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (target) target.hidden = false;
 
     // 3. Update Navbar Buttons Visibility
-    // 'Kalkulator' button visible on Home & Detail
     if (els.autoNavMeterBtn) els.autoNavMeterBtn.hidden = !(sectionId === 'home' || sectionId === 'detail');
-    // 'Lihat Info' button visible everywhere EXCEPT 'info' page
     if (els.openInfoBtn) els.openInfoBtn.hidden = (sectionId === 'info');
 
     // Scroll top
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // ===== Event Listeners (Safe Bindings) =====
+  // ===== Event Listeners =====
   if (els.goToListBtn) {
     els.goToListBtn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -157,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (els.openInfoBtn) els.openInfoBtn.addEventListener('click', () => show('info'));
   if (els.autoNavMeterBtn) els.autoNavMeterBtn.addEventListener('click', () => show('meter'));
 
-  const navCalc = document.getElementById('nav-calc-btn'); // Just in case it's distinct
+  const navCalc = document.getElementById('nav-calc-btn'); 
   if (navCalc) navCalc.addEventListener('click', () => show('meter'));
 
   // Scanner Buttons
@@ -444,7 +434,6 @@ document.addEventListener('DOMContentLoaded', () => {
       // 30-42g -> 3
       // >42g -> 4 (max visualized usually 4 in this set)
 
-      // Updated Logic: Use 1 for 0, 2 for 3 (since files 0 and 3 are missing)
       if (sugarVal < 6) spoonCount = 1;
       else if (sugarVal < 18) spoonCount = 1;
       else if (sugarVal < 30) spoonCount = 2;
@@ -568,10 +557,10 @@ document.addEventListener('DOMContentLoaded', () => {
     METER_STATE.selected.push(p);
     updateGauge();
     renderSelectedList();
-    renderMeterGrid(); // Re-render to update buttons
+    renderMeterGrid(); 
   }
 
-  window.addMeterProduct = addMeterProduct; // Export for Scanner
+  window.addMeterProduct = addMeterProduct; 
 
   function removeMeterProduct(index) {
     METER_STATE.selected.splice(index, 1);
@@ -617,7 +606,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     if (METER_STATE.page > 1) els.meterPagination.appendChild(createBtn(METER_STATE.page - 1, '«'));
     for (let i = 1; i <= totalPages; i++) {
-      els.meterPagination.appendChild(createBtn(i, i, i === METER_STATE.page)); // Simplification for robustness
+      els.meterPagination.appendChild(createBtn(i, i, i === METER_STATE.page)); 
     }
     if (METER_STATE.page < totalPages) els.meterPagination.appendChild(createBtn(METER_STATE.page + 1, '»'));
   }
