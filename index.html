@@ -36,8 +36,7 @@
       </h1>
 
       <div class="header-right">
-        <button type="button" id="nav-meter-btn" class="btn-primary"
-          style="padding: 8px 12px; font-weight:700;" hidden>
+        <button type="button" id="nav-meter-btn" class="btn-primary" style="padding: 8px 12px; font-weight:700;" hidden>
           <i class='bx bx-calculator' style="font-size:1.1rem; vertical-align:middle; margin-right:4px;"></i> Kalkulator
         </button>
         <button type="button" id="open-info" class="btn-primary" style="padding: 8px 12px; font-weight:700;" hidden>
@@ -242,6 +241,7 @@
                 <tr>
                   <th>Kandungan</th>
                   <th>Jumlah</th>
+                  <th style="width: 80px; text-align: right;">% AKG*</th>
                 </tr>
               </thead>
               <tbody id="tabel-gizi"></tbody>
@@ -251,6 +251,16 @@
         </div>
 
         <aside class="sidebar">
+          <div class="card">
+            <h3 id="persen-akg">...% dari AKG*</h3>
+            <div class="chart-container"><canvas id="macro-chart"></canvas></div>
+            <div id="rincian-makro">Rincian Kalori: ...</div>
+            <p style="font-size: 0.8rem; color: var(--muted); margin-top: 10px; line-height: 1.4;">
+              * Persen AKG berdasarkan kebutuhan energi 2150kkal. Kebutuhan energi anda mungkin lebih tinggi atau lebih
+              rendah.
+            </p>
+          </div>
+
           <div class="card">
             <h3>Ringkasan Gizi</h3>
             <div class="summary-grid">
@@ -292,14 +302,18 @@
                 style="font-size: 0.9rem; color: var(--muted); margin-top:10px; text-align:center;">
                 0g terpenuhi dari batas harian
               </div>
-
             </div>
-          </div>
 
-          <div class="card">
-            <h3 id="persen-akg">...% dari AKG*</h3>
-            <div class="chart-container"><canvas id="macro-chart"></canvas></div>
-            <div id="rincian-makro">Rincian Kalori: ...</div>
+            <div class="sugar-visual" style="margin-top: 15px; border-top: 1px solid var(--row); padding-top: 15px;">
+              <p style="font-size: 0.9rem; font-weight: bold; text-align: center; margin-bottom: 5px;">Estimasi Takaran
+                Sendok:</p>
+              <img id="detail-sugar-spoon-img" src="./img/sugar_visual/sendok-gula-1.png" alt="Ilustrasi sendok gula"
+                class="sugar-spoon-img" style="max-width: 120px;">
+            </div>
+
+            <p style="font-size: 0.8rem; color: var(--muted); margin-top: 15px; line-height: 1.4;">
+              Rekomendasi konsumsi gula harian berdasarkan WHO dan Kemenkes yaitu 50 gr atau 4 sendok makan.
+            </p>
           </div>
 
           <div class="card">

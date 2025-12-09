@@ -97,6 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
     sugarPie: document.getElementById('sugar-pie'),
     sugarPieText: document.getElementById('sugar-pie-text'),
     sugarDetailText: document.getElementById('sugar-detail-text'),
+    detailSugarSpoonImg: document.getElementById('detail-sugar-spoon-img'),
   };
 
   // Safe Element Getter
@@ -351,11 +352,14 @@ document.addEventListener('DOMContentLoaded', () => {
       els.tabelGizi.innerHTML = '';
       const addRow = (label, val, unit, akgVal) => {
         const tr = document.createElement('tr');
-        let displayVal = `${val} ${unit}`;
-        if (akgVal !== undefined && akgVal !== null) {
-          displayVal += ` <small style="color:#666">(${akgVal}% AKG)</small>`;
+        const displayVal = `${val} ${unit}`;
+
+        let akgDisplay = '-';
+        if (akgVal !== undefined && akgVal !== null && !isNaN(akgVal)) {
+          akgDisplay = `${akgVal}%`;
         }
-        tr.innerHTML = `<td>${label}</td><td>${displayVal}</td>`;
+
+        tr.innerHTML = `<td>${label}</td><td style="text-align:right">${displayVal}</td><td style="text-align:right; font-weight:bold; color:var(--accent-2)">${akgDisplay}</td>`;
         els.tabelGizi.appendChild(tr);
       };
 
@@ -370,7 +374,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const tr = document.createElement('tr');
         tr.style.backgroundColor = '#fff3e0';
         tr.innerHTML = `<td style="font-weight:bold; color:#d84315">Setara Gula</td>
-                        <td style="font-weight:bold; color:#d84315">~ ${p.sugar_spoons} Sendok Makan</td>`;
+                        <td style="font-weight:bold; color:#d84315; text-align:right">~ ${p.sugar_spoons} sdm</td>
+                        <td></td>`;
         els.tabelGizi.appendChild(tr);
       }
       addRow('Garam (Natrium)', p.nf_sodium || 0, 'mg', p.akg_sodium);
@@ -382,8 +387,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (els.infoProtein) els.infoProtein.textContent = (p.nf_protein || 0) + 'g';
 
     if (els.persenAKG) {
+      // Changed base from 2000 to 2150
       if (p.akg_calories) els.persenAKG.textContent = `≈ ${p.akg_calories}% dari AKG*`;
-      else els.persenAKG.textContent = `≈ ${Math.round(((p.nf_calories || 0) / 2000) * 100)}% dari AKG*`;
+      else els.persenAKG.textContent = `≈ ${Math.round(((p.nf_calories || 0) / 2150) * 100)}% dari AKG*`;
     }
 
     // Macro Chart
@@ -427,6 +433,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (els.sugarPieText) els.sugarPieText.textContent = `${sugarPercent}%`;
     if (els.sugarDetailText) els.sugarDetailText.innerHTML = `<strong>${sugarVal}g</strong> terpenuhi dari batas harian <strong>${dailySugarLimit}g</strong>`;
+
+    // Spoon Visual Logic
+    if (els.detailSugarSpoonImg) {
+      let spoonCount = 0;
+      // Logic: 1 spoon approx 12-13g. 
+      // 0-6g -> 0
+      // 6-18g -> 1
+      // 18-30g -> 2
+      // 30-42g -> 3
+      // >42g -> 4 (max visualized usually 4 in this set)
+
+      // Updated Logic: Use 1 for 0, 2 for 3 (since files 0 and 3 are missing)
+      if (sugarVal < 6) spoonCount = 1;
+      else if (sugarVal < 18) spoonCount = 1;
+      else if (sugarVal < 30) spoonCount = 2;
+      else if (sugarVal < 42) spoonCount = 2;
+      else spoonCount = 4;
+
+      els.detailSugarSpoonImg.src = `./img/sugar_visual/sendok-gula-${spoonCount}.png`;
+      els.detailSugarSpoonImg.alt = `Ilustrasi ${spoonCount} sendok makan gula`;
+    }
 
     show('detail');
   }
