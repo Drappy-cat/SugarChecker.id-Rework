@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       return localStorage.getItem(THEME_KEY) || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     } catch (e) {
-      return 'light'; 
+      return 'light';
     }
   }
 
@@ -47,8 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
     goHome: document.getElementById('go-home'),
     backBtn: document.getElementById('back-to-home'),
     backMeterBtn: document.getElementById('back-from-meter'),
-    autoNavMeterBtn: document.getElementById('nav-meter-btn'), 
-    navMeterBtn: document.getElementById('nav-calc-btn'), 
+    autoNavMeterBtn: document.getElementById('nav-meter-btn'),
+    navMeterBtn: document.getElementById('nav-calc-btn'),
 
     openInfoBtn: document.getElementById('open-info'),
     openScannerBtn: document.getElementById('open-scanner'),
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (els.openInfoBtn) els.openInfoBtn.addEventListener('click', () => show('info'));
   if (els.autoNavMeterBtn) els.autoNavMeterBtn.addEventListener('click', () => show('meter'));
 
-  const navCalc = document.getElementById('nav-calc-btn'); 
+  const navCalc = document.getElementById('nav-calc-btn');
   if (navCalc) navCalc.addEventListener('click', () => show('meter'));
 
   // Scanner Buttons
@@ -353,7 +353,9 @@ document.addEventListener('DOMContentLoaded', () => {
         els.tabelGizi.appendChild(tr);
       };
 
-      addRow('Energi Total', p.nf_calories || 0, 'kkal', p.akg_calories);
+      const energyCal = parseFloat(p.nf_calories) || 0;
+      const energyAkg = (energyCal / 2150) * 100;
+      addRow('Energi Total', p.nf_calories || 0, 'kkal', energyAkg.toFixed(1).replace('.', ','));
       addRow('Lemak Total', p.nf_total_fat || 0, 'g', p.akg_fat);
       addRow('Lemak Jenuh', p.nf_saturated_fat || 0, 'g', p.akg_saturated_fat);
       addRow('Protein', p.nf_protein || 0, 'g', p.akg_protein);
@@ -361,58 +363,70 @@ document.addEventListener('DOMContentLoaded', () => {
       addRow('Gula Total', p.nf_total_sugars || 0, 'g', null);
 
       if (p.sugar_spoons) {
-        const tr = document.createElement('tr');
-        tr.style.backgroundColor = '#fff3e0';
-        tr.innerHTML = `<td style="font-weight:bold; color:#d84315">Setara Gula</td>
-                        <td style="font-weight:bold; color:#d84315; text-align:right">~ ${p.sugar_spoons} sdm</td>
-                        <td></td>`;
-        els.tabelGizi.appendChild(tr);
+        // Removed from table as per request
       }
       addRow('Garam (Natrium)', p.nf_sodium || 0, 'mg', p.akg_sodium);
     }
 
-    if (els.infoKal) els.infoKal.textContent = p.nf_calories || 0;
-    if (els.infoLemak) els.infoLemak.textContent = (p.nf_total_fat || 0) + 'g';
-    if (els.infoKarbo) els.infoKarbo.textContent = (p.nf_total_carbs || 0) + 'g';
-    if (els.infoProtein) els.infoProtein.textContent = (p.nf_protein || 0) + 'g';
+    if (els.infoKal) els.infoKal.textContent = (p.nf_calories || 0) + ' Kkal';
+    if (els.infoLemak) els.infoLemak.textContent = (p.nf_total_fat || 0) + ' g';
+    if (els.infoKarbo) els.infoKarbo.textContent = (p.nf_total_carbs || 0) + ' g';
+    if (els.infoProtein) els.infoProtein.textContent = (p.nf_protein || 0) + ' g';
 
     if (els.persenAKG) {
-      // Changed base from 2000 to 2150
-      if (p.akg_calories) els.persenAKG.textContent = `≈ ${p.akg_calories}% dari AKG*`;
-      else els.persenAKG.textContent = `≈ ${Math.round(((p.nf_calories || 0) / 2150) * 100)}% dari AKG*`;
+      const cal = parseFloat(p.nf_calories) || 0;
+      const pct = (cal / 2150) * 100;
+      els.persenAKG.textContent = `≈ ${pct.toFixed(1).replace('.', ',')}% dari AKG*`;
     }
 
-    // Macro Chart
+    // Macro Chart (Now Energy AKG Chart)
     const ctx = document.getElementById('macro-chart') ? document.getElementById('macro-chart').getContext('2d') : null;
     if (ctx) {
       if (macroChart) macroChart.destroy();
-      const c = (p.nf_total_carbs || 0) * 4, pr = (p.nf_protein || 0) * 4, f = (p.nf_total_fat || 0) * 9;
-      const total = c + pr + f;
-      const cp = total ? Math.round(c / total * 100) : 0;
-      const pp = total ? Math.round(pr / total * 100) : 0;
-      const fp = 100 - cp - pp;
-      if (els.rincianMakro) els.rincianMakro.textContent = `Karbohidrat ${cp}%, Protein ${pp}%, Lemak ${fp}%`;
+
+      const cal = parseFloat(p.nf_calories) || 0;
+      const totalAKG = 2150;
+      let pct = (cal / totalAKG) * 100;
+      // Clamp for visual chart only, not value
+      const visualPct = Math.min(pct, 100);
+
+      // Hide textual breakdown
+      if (els.rincianMakro) els.rincianMakro.style.display = 'none';
 
       macroChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-          labels: ['Karbo', 'Protein', 'Lemak'],
+          labels: ['Energi Terpenuhi', 'Sisa'],
           datasets: [{
-            data: [cp, pp, fp],
-            backgroundColor: ['#42a5f5', '#66bb6a', '#ff7043']
+            data: [visualPct, 100 - visualPct],
+            backgroundColor: ['#fbc02d', '#e0e0e0'],
+            borderWidth: 0
           }]
         },
-        options: { plugins: { legend: { position: 'bottom' } }, cutout: '65%' }
+        options: {
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function (c) {
+                  return c.parsed.toFixed(1) + '%';
+                }
+              }
+            }
+          },
+          cutout: '70%'
+        }
       });
     }
 
     // Sugar Pie Chart
     const dailySugarLimit = 50;
     const sugarVal = parseFloat(p.nf_total_sugars) || 0;
-    const sugarPercent = Math.min(Math.round((sugarVal / dailySugarLimit) * 100), 100);
+    const sugarPercent = Math.round((sugarVal / dailySugarLimit) * 100);
 
     if (els.sugarPie) {
-      els.sugarPie.style.setProperty('--p', sugarPercent);
+      // Clamp CSS only for visual circle limit (max 100)
+      els.sugarPie.style.setProperty('--p', Math.min(sugarPercent, 100));
       // Tooltip Data
       els.sugarPie.setAttribute('data-label', `${sugarVal}g`);
 
@@ -422,27 +436,22 @@ document.addEventListener('DOMContentLoaded', () => {
       els.sugarPie.style.setProperty('--c', color);
     }
     if (els.sugarPieText) els.sugarPieText.textContent = `${sugarPercent}%`;
-    if (els.sugarDetailText) els.sugarDetailText.innerHTML = `<strong>${sugarVal}g</strong> terpenuhi dari batas harian <strong>${dailySugarLimit}g</strong>`;
+
+    if (els.sugarDetailText) {
+      let msg = `<strong>${sugarVal}g</strong> terpenuhi dari batas harian <strong>${dailySugarLimit}g</strong>`;
+      if (sugarPercent >= 100) {
+        msg += `<br><span style="color:#d32f2f; font-weight:bold; display:block; margin-top:5px;">⚠️ Melebihi batas konsumsi harian!</span>`;
+      }
+      els.sugarDetailText.innerHTML = msg;
+    }
 
     // Spoon Visual Logic
-    if (els.detailSugarSpoonImg) {
-      let spoonCount = 0;
-      // Logic: 1 spoon approx 12-13g. 
-      // 0-6g -> 0
-      // 6-18g -> 1
-      // 18-30g -> 2
-      // 30-42g -> 3
-      // >42g -> 4 (max visualized usually 4 in this set)
-
-      if (sugarVal < 6) spoonCount = 1;
-      else if (sugarVal < 18) spoonCount = 1;
-      else if (sugarVal < 30) spoonCount = 2;
-      else if (sugarVal < 42) spoonCount = 2;
-      else spoonCount = 4;
-
-      els.detailSugarSpoonImg.src = `./img/sugar_visual/sendok-gula-${spoonCount}.png`;
-      els.detailSugarSpoonImg.alt = `Ilustrasi ${spoonCount} sendok makan gula`;
+    const spoonTextEl = document.getElementById('sugar-spoon-count');
+    if (spoonTextEl) {
+      spoonTextEl.textContent = p.sugar_spoons ? `~ ${p.sugar_spoons} sdm` : '';
     }
+
+
 
     show('detail');
   }
@@ -557,10 +566,10 @@ document.addEventListener('DOMContentLoaded', () => {
     METER_STATE.selected.push(p);
     updateGauge();
     renderSelectedList();
-    renderMeterGrid(); 
+    renderMeterGrid();
   }
 
-  window.addMeterProduct = addMeterProduct; 
+  window.addMeterProduct = addMeterProduct;
 
   function removeMeterProduct(index) {
     METER_STATE.selected.splice(index, 1);
@@ -606,7 +615,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     if (METER_STATE.page > 1) els.meterPagination.appendChild(createBtn(METER_STATE.page - 1, '«'));
     for (let i = 1; i <= totalPages; i++) {
-      els.meterPagination.appendChild(createBtn(i, i, i === METER_STATE.page)); 
+      els.meterPagination.appendChild(createBtn(i, i, i === METER_STATE.page));
     }
     if (METER_STATE.page < totalPages) els.meterPagination.appendChild(createBtn(METER_STATE.page + 1, '»'));
   }

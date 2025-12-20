@@ -529,7 +529,7 @@ main {
 }
 
 .summary-item .value {
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 800;
   color: var(--danger)
 }
@@ -1358,6 +1358,7 @@ main {
   justify-content: center;
   position: relative;
   transition: all 0.5s ease;
+  flex-shrink: 0;
 }
 
 /* Tooltip on Hover */

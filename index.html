@@ -271,17 +271,17 @@
               </div>
               <div class="summary-item" style="color: #d32f2f;">
                 <i class='bx bxs-droplet' style="font-size: 2rem; margin-bottom:5px;"></i>
-                <div class="value" id="info-lemak">0g</div>
+                <div class="value" id="info-lemak">0 g</div>
                 <div class="label">Lemak</div>
               </div>
               <div class="summary-item" style="color: #1976d2;">
                 <i class='bx bx-baguette' style="font-size: 2rem; margin-bottom:5px;"></i>
-                <div class="value" id="info-karbo">0g</div>
+                <div class="value" id="info-karbo">0 g</div>
                 <div class="label">Karbo</div>
               </div>
               <div class="summary-item" style="color: #f57c00;">
                 <i class='bx bx-dumbbell' style="font-size: 2rem; margin-bottom:5px;"></i>
-                <div class="value" id="info-protein">0g</div>
+                <div class="value" id="info-protein">0 g</div>
                 <div class="label">Protein</div>
               </div>
             </div>
@@ -291,7 +291,7 @@
           <div class="card">
             <h3>Gula Harian (50g)</h3>
             <div class="chart-container"
-              style="justify-content:center; align-items:center; display:flex; flex-direction:column; padding: 10px 0;">
+              style="justify-content:center; align-items:center; display:flex; flex-direction:column; padding: 10px 0; margin-top: 30px;">
 
               <!-- CSS Pie Chart -->
               <div class="pie-chart" id="sugar-pie" style="--p:0; --c:#e91e63;">
@@ -304,11 +304,14 @@
               </div>
             </div>
 
-            <div class="sugar-visual" style="margin-top: 15px; border-top: 1px solid var(--row); padding-top: 15px;">
+            <div class="sugar-visual" style="margin-top: 30px; border-top: 1px solid var(--row); padding-top: 15px;">
+              <img id="detail-sugar-spoon-img" src="./img/sugar_visual/sendok-gula.png" alt="Ilustrasi sendok gula"
+                class="sugar-spoon-img" style="max-width: 140px; margin-bottom: 15px;">
               <p style="font-size: 0.9rem; font-weight: bold; text-align: center; margin-bottom: 5px;">Estimasi Takaran
                 Sendok:</p>
-              <img id="detail-sugar-spoon-img" src="./img/sugar_visual/sendok-gula-1.png" alt="Ilustrasi sendok gula"
-                class="sugar-spoon-img" style="max-width: 120px;">
+              <div id="sugar-spoon-count"
+                style="text-align:center; font-weight:bold; font-size:1.1rem; color:var(--accent-2); margin-bottom:5px;">
+              </div>
             </div>
 
             <p style="font-size: 0.8rem; color: var(--muted); margin-top: 15px; line-height: 1.4;">
