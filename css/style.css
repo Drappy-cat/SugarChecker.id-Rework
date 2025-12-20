@@ -1417,3 +1417,135 @@ main {
   display: block;
   white-space: nowrap;
 }
+
+/* ========== CALCULATOR TABLE STYLES ========== */
+
+/* Toggle Chips */
+.toggle-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg);
+  border: 1px solid var(--card-border);
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.toggle-chip:hover {
+  background: var(--row);
+}
+
+.toggle-chip:has(input:checked) {
+  background: var(--accent-2);
+  color: #fff;
+  border-color: var(--accent-2);
+}
+
+.toggle-chip:has(input:disabled) {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.toggle-chip input {
+  display: none;
+  /* Hide default checkbox */
+}
+
+/* Table Wrapper & Base */
+.table-wrapper {
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  background: var(--bg);
+}
+
+.calc-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+  table-layout: fixed;
+  /* Force scroll on small screens */
+}
+
+.calc-table th,
+.calc-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--row);
+}
+
+.calc-table th {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+}
+
+.calc-table td {
+  font-size: 0.95rem;
+  vertical-align: middle;
+}
+
+.calc-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.calc-table tbody tr:hover {
+  background-color: color-mix(in srgb, var(--accent-2) 5%, transparent);
+}
+
+/* Footer (Totals) */
+.calc-table tfoot {
+  background: var(--row);
+  font-weight: 800;
+}
+
+.calc-table tfoot td {
+  border-top: 2px solid var(--card-border);
+  color: var(--text);
+}
+
+/* Specific Columns Styling */
+.col-num {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+  width: 15%;
+  min-width: 80px;
+}
+
+.calc-table th:first-child,
+.calc-table td:first-child {
+  width: 50px;
+  text-align: center;
+}
+
+.col-action {
+  width: 50px;
+  text-align: center !important;
+}
+
+/* Remove Button in Table */
+.tbl-remove-btn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tbl-remove-btn:hover {
+  background: var(--danger);
+  color: #fff;
+}

@@ -17,7 +17,7 @@
     })();
   </script>
 
-  <link id="css-main" rel="stylesheet" href="./css/style.css?v=1">
+  <link id="css-main" rel="stylesheet" href="./css/style.css?v=3">
   <!-- Icons (No local files) -->
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
@@ -167,18 +167,40 @@
 
         <!-- Angka & Status -->
         <div id="gauge-value"
-          style="font-size: 2.5rem; font-weight: 800; line-height:1; margin-top:-10px; position:relative; z-index:20;">
+          style="font-size: 2.5rem; font-weight: 800; line-height:1.2; margin-top:0px; position:relative; z-index:20;">
           0g</div>
         <div id="gauge-status" style="font-size: 1.1rem; font-weight: 600; margin-top:5px; color: var(--muted);">Aman
         </div>
 
-        <p id="gauge-warning" style="color: #d32f2f; font-weight: bold; margin-top: 15px; display: none;">⚠️ Melebihi
+        <p id="gauge-warning" style="color: #d32f2f; font-weight: bold; margin-top: 25px; display: none;">⚠️ Melebihi
           Batas Harian!</p>
 
-        <div id="selected-products-list" style="margin-top: 20px; text-align: left;">
-          <!-- List produk terpilih  -->
-          <p class="empty-hint" style="text-align:center; color: var(--text-muted);">Belum ada produk dipilih (Max 5)
-          </p>
+        <!-- New: Column Toggles -->
+        <div class="column-toggles"
+          style="margin-top: 25px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+          <!-- JS will populate if needed, or static: -->
+          <label class="toggle-chip"><input type="checkbox" value="nf_calories" checked> Energi</label>
+          <label class="toggle-chip"><input type="checkbox" value="nf_total_fat"> Lemak</label>
+          <label class="toggle-chip"><input type="checkbox" value="nf_total_carbs"> Karbo</label>
+          <label class="toggle-chip"><input type="checkbox" value="nf_protein"> Protein</label>
+          <label class="toggle-chip"><input type="checkbox" value="nf_total_sugars" checked disabled> Gula</label>
+          <!-- Gula always on -->
+        </div>
+
+        <div class="table-wrapper" style="margin-top: 20px; overflow-x: auto;">
+          <table id="selected-products-table" class="calc-table">
+            <thead>
+              <!-- Dynamic Headers -->
+            </thead>
+            <tbody>
+              <!-- Dynamic Rows -->
+            </tbody>
+            <tfoot>
+              <!-- Dynamic Totals -->
+            </tfoot>
+          </table>
+          <p id="empty-table-msg" class="empty-hint"
+            style="text-align:center; color: var(--text-muted); padding: 20px;">Belum ada produk dipilih</p>
         </div>
       </div>
 

@@ -104,7 +104,9 @@ document.addEventListener('DOMContentLoaded', () => {
     page: 1,
     itemsPerPage: 20,
     search: '',
-    sort: 'asc'
+    sort: 'asc',
+    // Default columns: Energy & Sugar (Sugar is mandatory anyway)
+    visibleColumns: ['nf_calories', 'nf_total_sugars'] // Initial Check will be handled by UI state
   };
 
   // ===== Navigation Logic =====
@@ -561,11 +563,38 @@ document.addEventListener('DOMContentLoaded', () => {
     renderPagination(totalPages);
   }
 
+  // ===== Dynamic Table Logic =====
+  const COL_DEFS = {
+    nf_calories: { label: 'Energi', unit: 'kkal' },
+    nf_total_fat: { label: 'Lemak', unit: 'g' },
+    nf_total_carbs: { label: 'Karbo', unit: 'g' },
+    nf_protein: { label: 'Protein', unit: 'g' },
+    nf_total_sugars: { label: 'Gula', unit: 'g' }
+  };
+
+  // Initialize Checkboxes
+  const colToggles = document.querySelectorAll('.toggle-chip input');
+  colToggles.forEach(input => {
+    input.addEventListener('change', () => {
+      // Update State based on Checked Boxes
+      METER_STATE.visibleColumns = Array.from(colToggles)
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+      renderSelectedTable();
+    });
+  });
+
+  // Init State from HTML Checkboxes
+  METER_STATE.visibleColumns = Array.from(colToggles)
+    .filter(cb => cb.checked)
+    .map(cb => cb.value);
+
+
   function addMeterProduct(p) {
     if (METER_STATE.selected.length >= 10) return;
     METER_STATE.selected.push(p);
     updateGauge();
-    renderSelectedList();
+    renderSelectedTable(); // Changed from renderSelectedList
     renderMeterGrid();
   }
 
@@ -574,32 +603,105 @@ document.addEventListener('DOMContentLoaded', () => {
   function removeMeterProduct(index) {
     METER_STATE.selected.splice(index, 1);
     updateGauge();
-    renderSelectedList();
+    renderSelectedTable(); // Changed from renderSelectedList
     renderMeterGrid();
   }
 
-  function renderSelectedList() {
-    if (!els.selectedList) return;
-    els.selectedList.innerHTML = '';
+  function renderSelectedTable() {
+    const tableTable = document.getElementById('selected-products-table');
+    const emptyMsg = document.getElementById('empty-table-msg');
+
+    // Hide table if empty
     if (METER_STATE.selected.length === 0) {
-      els.selectedList.innerHTML = '<p class="empty-hint" style="text-align:center; color: var(--text-muted);">Belum ada produk dipilih (Max 10)</p>';
+      if (tableTable) tableTable.hidden = true;
+      if (emptyMsg) emptyMsg.hidden = false;
       return;
     }
-    METER_STATE.selected.forEach((p, idx) => {
-      const div = document.createElement('div'); div.className = 'selected-item';
-      const infoDiv = document.createElement('div');
-      infoDiv.style.flex = '1'; infoDiv.style.cursor = 'pointer'; infoDiv.title = 'Lihat Detail';
-      infoDiv.innerHTML = `<div class="selected-item-name" style="text-decoration:underline">${p.product_name}</div><div class="selected-item-val">Gula ${p.nf_total_sugars || 0} g</div>`;
-      infoDiv.addEventListener('click', () => openDetail(p));
 
-      const btn = document.createElement('button');
-      btn.className = 'remove-btn'; btn.innerHTML = '×';
-      btn.addEventListener('click', (e) => { e.stopPropagation(); removeMeterProduct(idx); });
+    if (tableTable) tableTable.hidden = false;
+    if (emptyMsg) emptyMsg.hidden = true;
 
-      div.appendChild(infoDiv); div.appendChild(btn);
-      els.selectedList.appendChild(div);
+    const thead = tableTable.querySelector('thead');
+    const tbody = tableTable.querySelector('tbody');
+    const tfoot = tableTable.querySelector('tfoot');
+
+    if (!thead || !tbody || !tfoot) return;
+
+    thead.innerHTML = '';
+    tbody.innerHTML = '';
+    tfoot.innerHTML = '';
+
+    // 1. Render Header
+    const trHead = document.createElement('tr');
+
+    // No Column
+    const thNo = document.createElement('th'); thNo.textContent = 'No'; thNo.style.width = '40px';
+    trHead.appendChild(thNo);
+
+    // Nama Produk
+    const thName = document.createElement('th'); thName.textContent = 'Nama Produk';
+    trHead.appendChild(thName);
+
+    // Dynamic Columns
+    METER_STATE.visibleColumns.forEach(key => {
+      const th = document.createElement('th');
+      th.className = 'col-num';
+      th.textContent = COL_DEFS[key].label;
+      trHead.appendChild(th);
     });
+
+    // Action Column
+    const thAction = document.createElement('th'); thAction.className = 'col-action';
+    trHead.appendChild(thAction);
+    thead.appendChild(trHead);
+
+    // 2. Render Body
+    const totals = {};
+    METER_STATE.visibleColumns.forEach(k => totals[k] = 0);
+
+    METER_STATE.selected.forEach((p, idx) => {
+      const tr = document.createElement('tr');
+
+      // No
+      tr.innerHTML += `<td>${idx + 1}</td>`;
+      // Name
+      tr.innerHTML += `<td><strong>${p.product_name}</strong></td>`;
+
+      // Cols
+      METER_STATE.visibleColumns.forEach(key => {
+        const val = parseFloat(p[key]) || 0;
+        totals[key] += val;
+        tr.innerHTML += `<td class="col-num">${val}</td>`;
+      });
+
+      // Action
+      const tdAct = document.createElement('td');
+      tdAct.className = 'col-action';
+      const btn = document.createElement('button');
+      btn.className = 'tbl-remove-btn';
+      btn.innerHTML = '<i class="bx bx-x"></i>'; // Ensure bx icon or text 'x'
+      btn.textContent = '×';
+      btn.onclick = () => removeMeterProduct(idx);
+      tdAct.appendChild(btn);
+      tr.appendChild(tdAct);
+
+      tbody.appendChild(tr);
+    });
+
+    // 3. Render Footer (Totals)
+    const trFoot = document.createElement('tr');
+    trFoot.innerHTML = `<td colspan="2">Total</td>`;
+
+    METER_STATE.visibleColumns.forEach(key => {
+      trFoot.innerHTML += `<td class="col-num">${totals[key].toFixed(1).replace(/\.0$/, '')} ${COL_DEFS[key].unit}</td>`;
+    });
+
+    trFoot.innerHTML += `<td></td>`; // Empty Action Col
+    tfoot.appendChild(trFoot);
   }
+
+
+
 
   function renderPagination(totalPages) {
     if (!els.meterPagination) return;
