@@ -499,8 +499,11 @@ main {
 /* Gaya untuk gambar produk dan barcode */
 .detail-photo {
   display: block;
-  max-width: 80%;
-  height: auto;
+  width: 100%;
+  max-width: 300px;
+  /* Batas lebar lebar */
+  height: 300px;
+  /* Tinggi Fix (Kotak) */
   margin: 1rem auto;
   padding: 10px;
   background-color: var(--input-bg);
@@ -508,6 +511,7 @@ main {
   border-radius: 12px;
   box-shadow: 0 4px 8px var(--shadow);
   object-fit: contain;
+  /* Agar gambar tidak gepeng */
 }
 
 .detail-photo-container {
