@@ -490,7 +490,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalSugar = METER_STATE.selected.reduce((acc, curr) => acc + (parseFloat(curr.nf_total_sugars) || 0), 0);
     const percentage = MAX_SUGAR > 0 ? (totalSugar / MAX_SUGAR) * 100 : 0;
 
-    if (els.gaugeValue) els.gaugeValue.textContent = `${totalSugar.toFixed(1)}g`;
+    if (els.gaugeValue) els.gaugeValue.textContent = `${totalSugar.toFixed(1)} g`;
 
     let statusText = "Aman";
     let statusColor = "#4caf50";
@@ -546,12 +546,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const meta = document.createElement('div'); meta.style.width = '100%';
         meta.innerHTML = `<div class="result-title" style="margin-top:8px">${p.product_name}</div>
                           <div class="result-sub">${p.brand || ''}</div>
-                          <div style="font-size:0.9rem; margin-top:4px; color:var(--text)">Gula: <strong>${p.nf_total_sugars || 0}g</strong></div>`;
+                          <div style="font-size:0.9rem; margin-top:4px; color:var(--text)">Gula: <strong>${p.nf_total_sugars || 0} g</strong></div>`;
 
         const btn = document.createElement('button');
         btn.className = 'btn-add'; btn.textContent = '+ Tambah';
-        if (METER_STATE.selected.length >= 5) {
-          btn.disabled = true; btn.textContent = 'Penuh (Max 5)';
+        if (METER_STATE.selected.length >= 10) {
+          btn.disabled = true; btn.textContent = 'Penuh (Max 10)';
         }
         btn.addEventListener('click', () => addMeterProduct(p));
         card.append(img, meta, btn);
@@ -562,7 +562,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function addMeterProduct(p) {
-    if (METER_STATE.selected.length >= 5) return;
+    if (METER_STATE.selected.length >= 10) return;
     METER_STATE.selected.push(p);
     updateGauge();
     renderSelectedList();
@@ -582,14 +582,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!els.selectedList) return;
     els.selectedList.innerHTML = '';
     if (METER_STATE.selected.length === 0) {
-      els.selectedList.innerHTML = '<p class="empty-hint" style="text-align:center; color: var(--text-muted);">Belum ada produk dipilih (Max 5)</p>';
+      els.selectedList.innerHTML = '<p class="empty-hint" style="text-align:center; color: var(--text-muted);">Belum ada produk dipilih (Max 10)</p>';
       return;
     }
     METER_STATE.selected.forEach((p, idx) => {
       const div = document.createElement('div'); div.className = 'selected-item';
       const infoDiv = document.createElement('div');
       infoDiv.style.flex = '1'; infoDiv.style.cursor = 'pointer'; infoDiv.title = 'Lihat Detail';
-      infoDiv.innerHTML = `<div class="selected-item-name" style="text-decoration:underline">${p.product_name}</div><div class="selected-item-val">${p.nf_total_sugars || 0}g</div>`;
+      infoDiv.innerHTML = `<div class="selected-item-name" style="text-decoration:underline">${p.product_name}</div><div class="selected-item-val">Gula ${p.nf_total_sugars || 0} g</div>`;
       infoDiv.addEventListener('click', () => openDetail(p));
 
       const btn = document.createElement('button');
