@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       return localStorage.getItem(THEME_KEY) || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     } catch (e) {
-      return 'light'; 
+      return 'light';
     }
   }
 
@@ -47,8 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
     goHome: document.getElementById('go-home'),
     backBtn: document.getElementById('back-to-home'),
     backMeterBtn: document.getElementById('back-from-meter'),
-    autoNavMeterBtn: document.getElementById('nav-meter-btn'), 
-    navMeterBtn: document.getElementById('nav-calc-btn'), 
+    autoNavMeterBtn: document.getElementById('nav-meter-btn'),
+    navMeterBtn: document.getElementById('nav-calc-btn'),
 
     openInfoBtn: document.getElementById('open-info'),
     openScannerBtn: document.getElementById('open-scanner'),
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (els.openInfoBtn) els.openInfoBtn.addEventListener('click', () => show('info'));
   if (els.autoNavMeterBtn) els.autoNavMeterBtn.addEventListener('click', () => show('meter'));
 
-  const navCalc = document.getElementById('nav-calc-btn'); 
+  const navCalc = document.getElementById('nav-calc-btn');
   if (navCalc) navCalc.addEventListener('click', () => show('meter'));
 
   // Scanner Buttons
@@ -371,38 +371,54 @@ document.addEventListener('DOMContentLoaded', () => {
       addRow('Garam (Natrium)', p.nf_sodium || 0, 'mg', p.akg_sodium);
     }
 
-    if (els.infoKal) els.infoKal.textContent = p.nf_calories || 0;
-    if (els.infoLemak) els.infoLemak.textContent = (p.nf_total_fat || 0) + 'g';
-    if (els.infoKarbo) els.infoKarbo.textContent = (p.nf_total_carbs || 0) + 'g';
-    if (els.infoProtein) els.infoProtein.textContent = (p.nf_protein || 0) + 'g';
+    if (els.infoKal) els.infoKal.textContent = (p.nf_calories || 0) + ' Kkal';
+    if (els.infoLemak) els.infoLemak.textContent = (p.nf_total_fat || 0) + ' g';
+    if (els.infoKarbo) els.infoKarbo.textContent = (p.nf_total_carbs || 0) + ' g';
+    if (els.infoProtein) els.infoProtein.textContent = (p.nf_protein || 0) + ' g';
 
     if (els.persenAKG) {
-      // Changed base from 2000 to 2150
-      if (p.akg_calories) els.persenAKG.textContent = `≈ ${p.akg_calories}% dari AKG*`;
-      else els.persenAKG.textContent = `≈ ${Math.round(((p.nf_calories || 0) / 2150) * 100)}% dari AKG*`;
+      const cal = parseFloat(p.nf_calories) || 0;
+      const pct = (cal / 2150) * 100;
+      els.persenAKG.textContent = `≈ ${pct.toFixed(1).replace('.', ',')}% dari AKG*`;
     }
 
-    // Macro Chart
+    // Macro Chart (Now Energy AKG Chart)
     const ctx = document.getElementById('macro-chart') ? document.getElementById('macro-chart').getContext('2d') : null;
     if (ctx) {
       if (macroChart) macroChart.destroy();
-      const c = (p.nf_total_carbs || 0) * 4, pr = (p.nf_protein || 0) * 4, f = (p.nf_total_fat || 0) * 9;
-      const total = c + pr + f;
-      const cp = total ? Math.round(c / total * 100) : 0;
-      const pp = total ? Math.round(pr / total * 100) : 0;
-      const fp = 100 - cp - pp;
-      if (els.rincianMakro) els.rincianMakro.textContent = `Karbohidrat ${cp}%, Protein ${pp}%, Lemak ${fp}%`;
+
+      const cal = parseFloat(p.nf_calories) || 0;
+      const totalAKG = 2150;
+      let pct = (cal / totalAKG) * 100;
+      // Clamp for visual chart only, not value
+      const visualPct = Math.min(pct, 100);
+
+      // Hide textual breakdown
+      if (els.rincianMakro) els.rincianMakro.style.display = 'none';
 
       macroChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-          labels: ['Karbo', 'Protein', 'Lemak'],
+          labels: ['Energi Terpenuhi', 'Sisa'],
           datasets: [{
-            data: [cp, pp, fp],
-            backgroundColor: ['#42a5f5', '#66bb6a', '#ff7043']
+            data: [visualPct, 100 - visualPct],
+            backgroundColor: ['#fbc02d', '#e0e0e0'],
+            borderWidth: 0
           }]
         },
-        options: { plugins: { legend: { position: 'bottom' } }, cutout: '65%' }
+        options: {
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function (c) {
+                  return c.parsed.toFixed(1) + '%';
+                }
+              }
+            }
+          },
+          cutout: '70%'
+        }
       });
     }
 
@@ -557,10 +573,10 @@ document.addEventListener('DOMContentLoaded', () => {
     METER_STATE.selected.push(p);
     updateGauge();
     renderSelectedList();
-    renderMeterGrid(); 
+    renderMeterGrid();
   }
 
-  window.addMeterProduct = addMeterProduct; 
+  window.addMeterProduct = addMeterProduct;
 
   function removeMeterProduct(index) {
     METER_STATE.selected.splice(index, 1);
@@ -606,7 +622,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     if (METER_STATE.page > 1) els.meterPagination.appendChild(createBtn(METER_STATE.page - 1, '«'));
     for (let i = 1; i <= totalPages; i++) {
-      els.meterPagination.appendChild(createBtn(i, i, i === METER_STATE.page)); 
+      els.meterPagination.appendChild(createBtn(i, i, i === METER_STATE.page));
     }
     if (METER_STATE.page < totalPages) els.meterPagination.appendChild(createBtn(METER_STATE.page + 1, '»'));
   }
